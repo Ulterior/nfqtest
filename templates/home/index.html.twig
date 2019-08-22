@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Home{% endblock %}
+
+{% block body %}
+
+<div class="container">
+    <h1>Management</h1>
+
+    <ul>
+        <li style="font-size:1.5em"><a href="{{ path('restaurants') }}">Restaurant List</a>&nbsp;<code>({{ restaurant_count }})</code></li>
+    </ul>
+</div>
+{% endblock %}

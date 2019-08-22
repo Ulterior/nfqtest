@@ -1,0 +1,4 @@
+parameters:
+    # the parameter name is an arbitrary string (the 'app.' prefix is recommended
+    # to better differentiate your parameters from Symfony parameters).
+    app.repository_path: '%env(resolve:IMAGE_REPOSITORY_PATH)%'

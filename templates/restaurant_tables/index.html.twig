@@ -1,0 +1,59 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Restaurant Table List{% endblock %}
+
+{% block stylesheets %}
+
+<style>
+  .card-header.status-inactive {
+    background-color:red;
+    color:white;
+  }
+</style>
+
+{% endblock %}
+
+{% block body %}
+
+<div class="container">
+  <div class="row" style="padding-bottom:10px">
+    <div class="col-md-12">
+      <h2>Restaurant <code>{{ restaurant.title }}</code> Table List</h2>
+    </div>
+    <div class="col-md-12">
+      <a class="btn btn-primary" href="{{ path('restaurants') }}">Restaurant List</a>
+      <a class="btn btn-primary" href="{{ path('new_restaurant_table', {'restaurant_id':restaurant.id}) }}">Add New</a>
+    </div>
+
+  </div>
+
+  {% for table in restaurant.tables %}
+  <div class="row" style="padding-bottom:10px">
+      <div class="col-md-8">
+          <div class="card card-default">
+              <div class="card-header status-{{ table.status }}">Table <span class="float-right">{{ table.status }}</span></div>
+              <div class="card-body" style="display:block">
+                <div class="row">
+                    <div class="col-md-6">
+                      <div class="row">
+                        <div class="col-md-12">
+                          Unique Number: {{ table.number }}
+                        </div>
+                        <div class="col-md-12">
+                          Capacity: {{ table.capacity }}
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                        <a class="btn btn-danger btn-sm float-right" style="margin-left:4px" href="{{ path('remove_restaurant_table', {'restaurant_id': restaurant.id, 'id': table.id}) }}">Delete</a>
+                        <a class="btn btn-primary btn-sm float-right" style="margin-left:4px" href="{{ path('edit_restaurant_table', {'restaurant_id': restaurant.id, 'id': table.id}) }}">Edit</a>
+                    </div>
+                </div>
+              </div>
+          </div>
+      </div>
+  </div>
+  {% endfor %}
+
+</div>
+{% endblock %}

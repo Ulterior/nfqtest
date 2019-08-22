@@ -1,0 +1,156 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Restaurant{% endblock %}
+
+{% block stylesheets %}
+
+<style>
+</style>
+
+{% endblock %}
+
+{% block javascripts %}
+
+<script type="text/javascript">
+
+$(document).ready(function() {
+
+  $('#uploadFileB').click(function() {
+    $('#fileUploadForm input#file').trigger("click");
+  });
+
+  $("#fileUploadForm input#file" ).change(function() {
+    $('#fileUploadForm').submit();
+  });
+
+  $('#fileUploadForm').submit(function(event) {
+
+   event.preventDefault();
+
+   if($("#file").val()) {
+
+     var data = new FormData(this); // <-- 'this' is your form element
+     data.append('_csrf_token', '{{ csrf_token('upload_restaurant_photo') }}');
+     var form = $(this);
+
+      var request = $.ajax({
+          type: form.attr('method'),
+          url: '{{ path('upload_restaurant_image', {'id': restaurant.id})}}',
+          data: data,
+          processData: false,
+          contentType: false,
+          xhr: function() {
+              var myXhr = $.ajaxSettings.xhr();
+              return myXhr;
+          },
+         success: function(response, textStatus, xhr) {
+          window.location.href = '{{ path('edit_restaurant', {'id': restaurant.id})}}';
+         },
+         error: function(xhr, textStatus, errorThrown) {
+          alert(textStatus);
+         }
+       }).done(function(result) {
+       });
+   }
+
+  });
+
+});
+
+</script>
+
+{% endblock %}
+
+{% block body %}
+
+<div class="container">
+  <div class="row" style="padding-bottom:10px">
+    <div class="col-md-12">
+      <a class="btn btn-primary" href="{{ path('restaurants') }}">Restaurant List</a>
+    </div>
+
+  </div>
+
+  <form method="POST" action="#" accept-charset="UTF-8" id="fileUploadForm" enctype="multipart/form-data">
+    <input style="display: none; visibility: hidden" id="file" class="" name="file" type="file">
+  </form>
+
+  <div class="row" style="padding-bottom:10px">
+      <div class="col-md-8">
+          <div class="card card-default">
+              <div class="card-header">Edit Restaurant</div>
+              <div class="card-body" style="display:block">
+
+                <form method="POST" action="{{ path('update_restaurant', {'id': restaurant.id}) }}">
+
+                  {% if info is defined %}
+                      <div class="alert alert-success">{{ info }}</div>
+                  {% endif %}
+
+                  {% if error is defined %}
+                      <div class="alert alert-danger">{{ error }}</div>
+                  {% endif %}
+
+                  {% if restaurant is defined %}
+
+                    <input type="hidden" name="_csrf_token"
+                           value="{{ csrf_token('update_restaurant') }}"
+                    >
+
+                    <div class="form-group row">
+                        <label for="title" class="col-md-4 col-form-label text-md-right">Title</label>
+
+                        <div class="col-md-6">
+                            <input id="title" type="text" class="form-control" name="title" value="{{ restaurant.title }}" required autofocus>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="photo" class="col-md-4 col-form-label text-md-right">Photo</label>
+
+                        <div class="col-md-5">
+                            <input id="photo" type="text" class="form-control" name="photo" value="{{ restaurant.photo }}" disabled>
+                        </div>
+
+                        <div class="col-md-3">
+                          <input class="btn btn-success" type="button" id="uploadFileB" value="Upload" />
+                        </div>
+                    </div>
+                    <div class="row" style="padding-bottom:10px">
+
+                      <div class="col-md-4"></div>
+                      <div class="col-md-5">
+
+                      {% if restaurant.photo %}
+                        <img style="border: 1px solid #ccc; max-width: 200px;" src="{{ path('restaurants_images', { 'filename': restaurant.photo }) }}"></img>
+                      {% endif %}
+
+                      </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-6 offset-md-4">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="status" id="status" {{ restaurant.status == 'active'? 'checked' : '' }}>
+
+                                <label class="form-check-label" for="status">Active</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group row mb-0">
+                        <div class="col-md-8 offset-md-4">
+                            <button type="submit" class="btn btn-primary">Update</button>
+                        </div>
+                    </div>
+
+                    {% endif %}
+
+                </form>
+
+              </div>
+          </div>
+      </div>
+</div>
+
+</div>
+{% endblock %}
