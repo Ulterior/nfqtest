@@ -10,12 +10,12 @@ use App\Entity\User as User;
 class UserFixtures extends Fixture
 {
 
-   private $passwordEncoder;
+    private $passwordEncoder;
 
-   public function __construct(UserPasswordEncoderInterface $passwordEncoder)
-   {
-       $this->passwordEncoder = $passwordEncoder;
-   }
+    public function __construct(UserPasswordEncoderInterface $passwordEncoder)
+    {
+        $this->passwordEncoder = $passwordEncoder;
+    }
 
     public function load(ObjectManager $manager)
     {

@@ -100,12 +100,12 @@ class Restaurant
 
     public function getNumActiveTables(): int
     {
-      $activeCount = 0;
-      foreach($this->tables as $table) {
-        if($table->getStatus() == RestaurantTable::STATUS_ACTIVE)
-          $activeCount++;
-      }
-      return $activeCount;
+        $activeCount = 0;
+        foreach ($this->tables as $table) {
+            if ($table->getStatus() == RestaurantTable::STATUS_ACTIVE) {
+                $activeCount++;
+            }
+        }
+        return $activeCount;
     }
-
 }

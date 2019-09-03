@@ -14,7 +14,8 @@ class HomeController extends AbstractController
     public function index()
     {
         $em = $this->getDoctrine()->getManager();
-        $query = $em->createQuery("SELECT COUNT(r) FROM App:".$em->getClassMetadata(Restaurant::class)->getTableName()." r");
+        $query = $em->createQuery("SELECT COUNT(r) FROM App:"
+        . $em->getClassMetadata(Restaurant::class)->getTableName()." r");
 
         $restaurantCount = $query->getSingleScalarResult();
 

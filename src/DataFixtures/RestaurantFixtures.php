@@ -12,7 +12,8 @@ class RestaurantFixtures extends Fixture
     public function load(ObjectManager $manager)
     {
         $restaurant1 = new Restaurant();
-        $restaurant1->setTitle('Red Lobster')->setStatus(Restaurant::STATUS_ACTIVE)->setPhoto('Red-Lobster-Logo.png');
+        $restaurant1->setTitle('Red Lobster')->
+        setStatus(Restaurant::STATUS_ACTIVE)->setPhoto('Red-Lobster-Logo.png');
 
         $manager->persist($restaurant1);
 
@@ -35,7 +36,8 @@ class RestaurantFixtures extends Fixture
         $manager->persist($restaurant1Table3);
 
         $restaurant2 = new Restaurant();
-        $restaurant2->setTitle('Texas RoadHouse')->setStatus(Restaurant::STATUS_INACTIVE)->setPhoto('texas_roadhouse.jpg');
+        $restaurant2->setTitle('Texas RoadHouse')->
+        setStatus(Restaurant::STATUS_INACTIVE)->setPhoto('texas_roadhouse.jpg');
 
         $manager->persist($restaurant2);
 
@@ -58,7 +60,8 @@ class RestaurantFixtures extends Fixture
         $manager->persist($restaurant2Table3);
 
         $restaurant3 = new Restaurant();
-        $restaurant3->setTitle('Red Robin')->setStatus(Restaurant::STATUS_ACTIVE)->setPhoto('red_robin.jpg');
+        $restaurant3->setTitle('Red Robin')->
+        setStatus(Restaurant::STATUS_ACTIVE)->setPhoto('red_robin.jpg');
 
         $manager->persist($restaurant3);
 

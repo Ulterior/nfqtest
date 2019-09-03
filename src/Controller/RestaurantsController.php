@@ -24,8 +24,12 @@ class RestaurantsController extends AbstractController
     private $csrfTokenManager;
     private $urlGenerator;
 
-    public function __construct(KernelInterface $kernel, ParameterBagInterface $params, UrlGeneratorInterface $urlGenerator, CsrfTokenManagerInterface $csrfTokenManager)
-    {
+    public function __construct(
+        KernelInterface $kernel,
+        ParameterBagInterface $params,
+        UrlGeneratorInterface $urlGenerator,
+        CsrfTokenManagerInterface $csrfTokenManager
+    ) {
         $this->rootDir = $kernel->getProjectDir();
         $this->params = $params;
         $this->csrfTokenManager = $csrfTokenManager;
@@ -101,20 +105,21 @@ class RestaurantsController extends AbstractController
      */
     public function removeRestaurant(Request $request, $id)
     {
-      $restaurant = $this->getDoctrine()
-          ->getRepository(Restaurant::class)
-          ->findOneById($id);
+        $restaurant = $this->getDoctrine()
+            ->getRepository(Restaurant::class)
+            ->findOneById($id);
 
-      if(!isset($restaurant))
-        return $this->render('restaurants/edit.html.twig', [
-            'error' => 'Invalid Record'
-        ]);
+        if (!isset($restaurant)) {
+            return $this->render('restaurants/edit.html.twig', [
+                'error' => 'Invalid Record'
+            ]);
+        }
 
-      $em = $this->getDoctrine()->getManager();
-      $em->remove($restaurant);
-      $em->flush();
+        $em = $this->getDoctrine()->getManager();
+        $em->remove($restaurant);
+        $em->flush();
 
-      return new RedirectResponse($this->urlGenerator->generate('restaurants'));
+        return new RedirectResponse($this->urlGenerator->generate('restaurants'));
     }
 
     /**
@@ -139,28 +144,31 @@ class RestaurantsController extends AbstractController
             ->getRepository(Restaurant::class)
             ->findOneById($id);
 
-        if(!isset($restaurant))
-          return $this->render('restaurants/edit.html.twig', [
-              'error' => 'Invalid Record'
-          ]);
+        if (!isset($restaurant)) {
+            return $this->render('restaurants/edit.html.twig', [
+                'error' => 'Invalid Record'
+            ]);
+        }
 
         $check_dup_title = $em->getRepository(Restaurant::class)->createQueryBuilder('r')->select('count(r.id)')
-       ->where('r.id <> ?1')
-       ->andWhere('r.title = ?2')
-       ->setParameters(array(1 => $id, 2 => $rparams['title']))
-       ->getQuery()->getSingleScalarResult();
+        ->where('r.id <> ?1')
+        ->andWhere('r.title = ?2')
+        ->setParameters(array(1 => $id, 2 => $rparams['title']))
+        ->getQuery()->getSingleScalarResult();
 
-        if($check_dup_title > 0)
-          return $this->render('restaurants/edit.html.twig', [
-              'restaurant' => $restaurant,
-              'error' => 'Duplicate restaurant title'
-          ]);
+        if ($check_dup_title > 0) {
+            return $this->render('restaurants/edit.html.twig', [
+                'restaurant' => $restaurant,
+                'error' => 'Duplicate restaurant title'
+            ]);
+        }
 
-        if(strlen($rparams['title']) <= 0)
-          return $this->render('restaurants/edit.html.twig', [
-              'restaurant' => $restaurant,
-              'error' => 'Invalid table title'
-          ]);
+        if (strlen($rparams['title']) <= 0) {
+            return $this->render('restaurants/edit.html.twig', [
+                'restaurant' => $restaurant,
+                'error' => 'Invalid table title'
+            ]);
+        }
 
         $restaurant->setTitle($rparams['title']);
         $restaurant->setStatus(isset($rparams['status']) ? Restaurant::STATUS_ACTIVE : Restaurant::STATUS_INACTIVE);
@@ -197,19 +205,21 @@ class RestaurantsController extends AbstractController
         $em = $this->getDoctrine()->getManager();
 
         $check_dup_title = $em->getRepository(Restaurant::class)->createQueryBuilder('r')->select('count(r.id)')
-       ->where('r.title = ?1')
-       ->setParameters(array(1 => $rparams['title']))
-       ->getQuery()->getSingleScalarResult();
+        ->where('r.title = ?1')
+        ->setParameters(array(1 => $rparams['title']))
+        ->getQuery()->getSingleScalarResult();
 
-        if($check_dup_title > 0)
-          return $this->render('restaurants/create.html.twig', [
-              'error' => 'Duplicate restaurant title'
-          ]);
+        if ($check_dup_title > 0) {
+            return $this->render('restaurants/create.html.twig', [
+                'error' => 'Duplicate restaurant title'
+            ]);
+        }
 
-        if(strlen($rparams['title']) <= 0)
-          return $this->render('restaurants/create.html.twig', [
-              'error' => 'Invalid table title'
-          ]);
+        if (strlen($rparams['title']) <= 0) {
+            return $this->render('restaurants/create.html.twig', [
+                'error' => 'Invalid table title'
+            ]);
+        }
 
         $restaurant = new Restaurant;
         $restaurant->setTitle($rparams['title']);
@@ -249,7 +259,8 @@ class RestaurantsController extends AbstractController
         if ($uploadedFile) {
             $originalFilename = pathinfo($uploadedFile->getClientOriginalName(), PATHINFO_FILENAME);
             // this is needed to safely include the file name as part of the URL
-            //$safeFilename = transliterator_transliterate('Any-Latin; Latin-ASCII; [^A-Za-z0-9_] remove; Lower()', $originalFilename);
+            //$safeFilename = transliterator_transliterate('Any-Latin; Latin-ASCII;
+            //[^A-Za-z0-9_] remove; Lower()', $originalFilename);
             //$newFilename = $safeFilename.'-'.uniqid().'.'.$uploadedFile->guessExtension();
 
             $newFilename = $originalFilename.'.'.$uploadedFile->guessExtension();
@@ -268,10 +279,11 @@ class RestaurantsController extends AbstractController
                 ->getRepository(Restaurant::class)
                 ->findOneById($id);
 
-            if(!isset($restaurant))
-              return $this->render('restaurants/edit.html.twig', [
-                  'error' => 'Invalid Record'
-              ]);
+            if (!isset($restaurant)) {
+                return $this->render('restaurants/edit.html.twig', [
+                    'error' => 'Invalid Record'
+                ]);
+            }
 
             $restaurant->setPhoto($newFilename);
 
@@ -283,7 +295,8 @@ class RestaurantsController extends AbstractController
         return new Response(
             $newFilename,
             Response::HTTP_OK,
-            ['content-type' => 'text/html']);
+            ['content-type' => 'text/html']
+        );
     }
 
     /**

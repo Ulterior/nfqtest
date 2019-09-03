@@ -31,7 +31,7 @@ class RestaurantTablesController extends AbstractController
      */
     public function index($restaurant_id)
     {
-      $restaurant = $this->getDoctrine()
+        $restaurant = $this->getDoctrine()
           ->getRepository(Restaurant::class)
           ->findOneById($restaurant_id);
 
@@ -45,7 +45,7 @@ class RestaurantTablesController extends AbstractController
      */
     public function getNewRestaurantTableView($restaurant_id)
     {
-      $restaurant = $this->getDoctrine()
+        $restaurant = $this->getDoctrine()
           ->getRepository(Restaurant::class)
           ->findOneById($restaurant_id);
 
@@ -73,20 +73,23 @@ class RestaurantTablesController extends AbstractController
      */
     public function removeRestaurantTable(Request $request, $restaurant_id, $id)
     {
-      $restaurant_table = $this->getDoctrine()
+        $restaurant_table = $this->getDoctrine()
           ->getRepository(RestaurantTable::class)
           ->findOneById($id);
 
-      if(!isset($restaurant_table))
-        return $this->render('restaurant_tables/edit.html.twig', [
-            'error' => 'Invalid Record'
-        ]);
+        if (!isset($restaurant_table)) {
+            return $this->render('restaurant_tables/edit.html.twig', [
+                'error' => 'Invalid Record'
+            ]);
+        }
 
-      $em = $this->getDoctrine()->getManager();
-      $em->remove($restaurant_table);
-      $em->flush();
+        $em = $this->getDoctrine()->getManager();
+        $em->remove($restaurant_table);
+        $em->flush();
 
-      return new RedirectResponse($this->urlGenerator->generate('restaurant_tables', ['restaurant_id' => $restaurant_id]));
+        return new RedirectResponse($this->urlGenerator->generate('restaurant_tables', [
+          'restaurant_id' => $restaurant_id
+        ]));
     }
 
     /**
@@ -110,41 +113,47 @@ class RestaurantTablesController extends AbstractController
             ->getRepository(RestaurantTable::class)
             ->findOneById($id);
 
-        if(!isset($restaurant_table))
-          return $this->render('restaurant_tables/edit.html.twig', [
-              'error' => 'Invalid Record'
-          ]);
+        if (!isset($restaurant_table)) {
+            return $this->render('restaurant_tables/edit.html.twig', [
+                'error' => 'Invalid Record'
+            ]);
+        }
 
         $em = $this->getDoctrine()->getManager();
 
         $check_dup_number = $em->getRepository(RestaurantTable::class)->createQueryBuilder('rt')->select('count(rt.id)')
-       ->where('rt.restaurant = ?1')
-       ->andWhere('rt.id <> ?2')
-       ->andWhere('rt.number = ?3')
-       ->setParameters(array(1 => $restaurant_id, 2 => $id, 3 => $rparams['number']))
-       ->getQuery()->getSingleScalarResult();
+        ->where('rt.restaurant = ?1')
+        ->andWhere('rt.id <> ?2')
+        ->andWhere('rt.number = ?3')
+        ->setParameters(array(1 => $restaurant_id, 2 => $id, 3 => $rparams['number']))
+        ->getQuery()->getSingleScalarResult();
 
-        if($check_dup_number > 0)
-          return $this->render('restaurant_tables/edit.html.twig', [
-              'table' => $restaurant_table,
-              'error' => 'Duplicate restaurant table number'
-          ]);
+        if ($check_dup_number > 0) {
+            return $this->render('restaurant_tables/edit.html.twig', [
+                'table' => $restaurant_table,
+                'error' => 'Duplicate restaurant table number'
+            ]);
+        }
 
-        if($rparams['number'] < 0)
-          return $this->render('restaurant_tables/edit.html.twig', [
-              'table' => $restaurant_table,
-              'error' => 'Invalid table number'
-          ]);
+        if ($rparams['number'] < 0) {
+            return $this->render('restaurant_tables/edit.html.twig', [
+                'table' => $restaurant_table,
+                'error' => 'Invalid table number'
+            ]);
+        }
 
-        if($rparams['capacity'] < 0)
-          return $this->render('restaurant_tables/edit.html.twig', [
-              'table' => $restaurant_table,
-              'error' => 'Invalid table capacity'
-          ]);
+        if ($rparams['capacity'] < 0) {
+            return $this->render('restaurant_tables/edit.html.twig', [
+                'table' => $restaurant_table,
+                'error' => 'Invalid table capacity'
+            ]);
+        }
 
         $restaurant_table->setNumber($rparams['number']);
         $restaurant_table->setCapacity($rparams['capacity']);
-        $restaurant_table->setStatus(isset($rparams['status']) ? RestaurantTable::STATUS_ACTIVE : RestaurantTable::STATUS_INACTIVE);
+        $restaurant_table->setStatus(
+            isset($rparams['status']) ? RestaurantTable::STATUS_ACTIVE : RestaurantTable::STATUS_INACTIVE
+        );
 
         $em->persist($restaurant_table);
         $em->flush();
@@ -183,34 +192,39 @@ class RestaurantTablesController extends AbstractController
         $em = $this->getDoctrine()->getManager();
 
         $check_dup_number = $em->getRepository(RestaurantTable::class)->createQueryBuilder('rt')->select('count(rt.id)')
-       ->where('rt.restaurant = ?1')
-       ->andWhere('rt.number = ?2')
-       ->setParameters(array(1 => $restaurant_id, 2 => $rparams['number']))
-       ->getQuery()->getSingleScalarResult();
+        ->where('rt.restaurant = ?1')
+        ->andWhere('rt.number = ?2')
+        ->setParameters(array(1 => $restaurant_id, 2 => $rparams['number']))
+        ->getQuery()->getSingleScalarResult();
 
-        if($check_dup_number > 0)
-          return $this->render('restaurant_tables/create.html.twig', [
-              'restaurant' => $restaurant,
-              'error' => 'Duplicate restaurant table number'
-          ]);
+        if ($check_dup_number > 0) {
+            return $this->render('restaurant_tables/create.html.twig', [
+                'restaurant' => $restaurant,
+                'error' => 'Duplicate restaurant table number'
+            ]);
+        }
 
-        if($rparams['number'] < 0)
-          return $this->render('restaurant_tables/create.html.twig', [
-              'restaurant' => $restaurant,
-              'error' => 'Invalid table number'
-          ]);
+        if ($rparams['number'] < 0) {
+            return $this->render('restaurant_tables/create.html.twig', [
+                'restaurant' => $restaurant,
+                'error' => 'Invalid table number'
+            ]);
+        }
 
-        if($rparams['capacity'] < 0)
-          return $this->render('restaurant_tables/create.html.twig', [
-              'restaurant' => $restaurant,
-              'error' => 'Invalid table capacity'
-          ]);
+        if ($rparams['capacity'] < 0) {
+            return $this->render('restaurant_tables/create.html.twig', [
+                'restaurant' => $restaurant,
+                'error' => 'Invalid table capacity'
+            ]);
+        }
 
         $restaurant_table = new RestaurantTable;
         $restaurant_table->setNumber($rparams['number']);
         $restaurant_table->setCapacity($rparams['capacity']);
         $restaurant_table->setRestaurant($restaurant);
-        $restaurant_table->setStatus(isset($rparams['status']) ? RestaurantTable::STATUS_ACTIVE : RestaurantTable::STATUS_INACTIVE);
+        $restaurant_table->setStatus(
+            isset($rparams['status']) ? RestaurantTable::STATUS_ACTIVE : RestaurantTable::STATUS_INACTIVE
+        );
 
         $em = $this->getDoctrine()->getManager();
         $em->persist($restaurant_table);
@@ -225,5 +239,4 @@ class RestaurantTablesController extends AbstractController
         //    'id' => $id,
         //]));
     }
-
 }

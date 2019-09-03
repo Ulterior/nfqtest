@@ -13,8 +13,9 @@ class WelcomeController extends AbstractController
      */
     public function index()
     {
-        if ($this->isGranted('ROLE_USER'))
-          return new RedirectResponse($this->generateUrl('home'));
+        if ($this->isGranted('ROLE_USER')) {
+            return new RedirectResponse($this->generateUrl('home'));
+        }
 
         return $this->render('welcome/index.html.twig', [
             'controller_name' => 'WelcomeController',
